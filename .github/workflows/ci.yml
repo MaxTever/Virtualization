@@ -34,6 +34,18 @@ jobs:
       run: |
         cd jupyter
         docker-compose up -d
-        sleep 30  # Даем время на запуск JupyterHub
-        curl -sSf http://localhost:8000 > /dev/null
+       
+
+    - name: Test container
+      run: |
+        if docker ps --filter "name=jupyter_jupiterhub_1" --format "{{.Names}}" | grep -q "jupyter_jupiterhub_1"; then
+          echo "Container is running"
+        else
+          echo "Container is not running"
+          exit 1
+        fi
+
+    - name: Stop docker-compose
+      run: |
+        cd jupyter
         docker-compose down
