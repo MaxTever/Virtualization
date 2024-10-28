@@ -32,6 +32,7 @@ jobs:
 
     - name: Run docker-compose
       run: |
+        cd jupyter
         docker-compose up -d
         sleep 30  # Даем время на запуск JupyterHub
         curl -sSf http://localhost:8000 > /dev/null
