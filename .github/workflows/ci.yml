@@ -8,7 +8,7 @@ on:
       - '.github/workflows/**'  # Запускать пайплайн только при изменениях в папке .github/workflows
       - 'jupyter'
       - 'Dockerfile'  # Запускать пайплайн при изменениях в Dockerfile
-      - 'docker-compose.yml'  # Запускать пайплайн при изменениях в docker-compose.yml
+      - 'docker-compose.yml'  # Запускать пайплайн при изменениях в docker-compose.yml,  добавить path ignore, health check посмотреть
 
 jobs:
   build:
@@ -34,7 +34,17 @@ jobs:
       run: |
         cd jupyter
         docker-compose up -d
-       
+      
+    - name: healthCheck
+      run: |
+        HEALTH_STATUS=$(docker inspect --format='{{json .State.Health.Status}}') jupyter_jupiterhub_1)
+          if ["$HEALTH_STATUS" != "\"healthy\""]; then
+            echo "Container is not healthy"
+            exit 1
+          else
+            echo ""Container is healthy""
+          fi
+
 
     - name: Test container
       run: |
