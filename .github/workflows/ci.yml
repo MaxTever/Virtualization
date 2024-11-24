@@ -37,7 +37,7 @@ jobs:
       
     - name: healthCheck
       run: |
-        HEALTH_STATUS=$(docker inspect --format='{{json .State.Health.Status}}') jupyter_jupiterhub_1)
+        HEALTH_STATUS=$(docker inspect --format='{{json .State.Health.Status}}' jupyter_jupiterhub_1)
           if ["$HEALTH_STATUS" != "\"healthy\""]; then
             echo "Container is not healthy"
             exit 1
