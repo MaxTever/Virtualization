@@ -1,0 +1,62 @@
+version: '3.8'
+
+services: 
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    restart: always
+    ports: 
+      - "80:80"
+    depends_on: 
+      - python-app
+    networks: 
+      - frontend
+      - backend
+    volumes: 
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+
+  redis: 
+    image: redis:latest
+    container_name: redis
+    restart: always
+    networks:
+      - backend
+
+  python-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: python-app
+    restart: always
+    depends_on:
+      - mongodb1
+      - mongodb2
+    networks:
+      - backend
+
+  mongodb1:
+    image: mongo:latest
+    container_name: mongodb1
+    restart: always
+    volumes:
+      - mongo_data1:/data/db
+    networks:
+      - backend
+
+
+  mongodb2:
+    image: mongo:latest
+    container_name: mongodb2
+    restart: always
+    volumes:
+      - mongo_data2:/data/db
+    networks:
+      - backend
+
+volumes:
+  mongo_data1:
+  mongo_data2:
+
+networks:
+  frontend:
+  backend:
