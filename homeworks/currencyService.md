@@ -22,3 +22,4 @@
         - ```docker cp currencyservice_container:/app/config.json ./config.json ```
         - После этого можно посмотреть файл: 
             - ```cat ./config.json ```
+    

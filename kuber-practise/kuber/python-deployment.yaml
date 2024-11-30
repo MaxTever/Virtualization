@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: python-deployment
+spec:
+  selector:
+    matchLabels:
+      app: python-app
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: python-app
+    spec:
+      containers:
+      - name: python-app
+        image: maxtever/compose-python-app:latest
+        ports:
+        - containerPort: 8000

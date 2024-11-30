@@ -5,10 +5,10 @@ on:
     branches:
       - main
     paths:
-      - '.github/workflows/**'  # Запускать пайплайн только при изменениях в папке .github/workflows
+      - '.github/workflows/**'  
       - 'jupyter'
-      - 'Dockerfile'  # Запускать пайплайн при изменениях в Dockerfile
-      - 'docker-compose.yml'  # Запускать пайплайн при изменениях в docker-compose.yml,  добавить path ignore, health check посмотреть
+      - 'Dockerfile'  
+      - 'docker-compose.yml'  
 
 jobs:
   build:
