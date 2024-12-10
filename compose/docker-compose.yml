@@ -40,6 +40,7 @@ services:
       - redis
       - python-app
     deploy:
+     ## mode: replicated ## Почитать про это еще про scale 
       replicas: 2
     volumes:
       - mongo_data1:/data/db
