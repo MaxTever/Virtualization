@@ -1,4 +1,4 @@
-FROM jupyter/minimal-notebook:latest
+FROM jupyterhub/jupyterhub:latest
 
 
 #Параметр корневой директории 
@@ -7,9 +7,9 @@ ENV ROOT_DIR=${ROOT_DIR}
 
 # Устанавливаем переменную окружения
 ENV JUPITERHUB_ADMIN_NAME=admin
+ENV JUPITERHUB_ADMIN_PASSWORD=admin
 
-# Устанавливаем jupyterhub
-RUN pip install jupyterhub
+EXPOSE 8000
 
 # Запускаем jupyterhub
 CMD ["jupyterhub"]
