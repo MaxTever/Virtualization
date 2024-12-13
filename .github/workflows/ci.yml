@@ -48,7 +48,7 @@ jobs:
 
     - name: Test container
       run: |
-        if docker ps --filter "name=jupyter_jupiterhub_1" --format "{{.Names}}" | grep -q "task_4_jupyterhub_1"; then
+        if docker ps --filter "name=task_4_jupyterhub_1" --format "{{.Names}}" | grep -q "task_4_jupyterhub_1"; then
           echo "Container is running"
         else
           echo "Container is not running"
