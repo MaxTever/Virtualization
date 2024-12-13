@@ -23,7 +23,7 @@ jobs:
 
     - name: Build Docker image
       run: |
-        docker build -t maxtever/jupyterhub:latest ./jupyter
+        docker build -t maxtever/jupyterhub:latest ./task_4
 
     - name: Install docker-compose
       run: |

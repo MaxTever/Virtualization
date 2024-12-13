@@ -11,6 +11,84 @@
 	-  GitHub Actions  
 	- ИЛИ Gitlab CI
 
+
+
+## Update
+
+После ночных экспериментов с проблемой  при авторизации в jupiterhub и проблемой со спавном ноутбуков. Были внесены следующие изменения: 
+
+1) Добавлены изменения в Dockerfile
+2) Небольшие правки docker-compose
+3) Добавлен jupyterhub_config.py 
+
+## 1 Изменения в Dockerfile
+
+ Добавлена дополнительная установка зависимостей: 
+
+`RUN pip install --no-cache-dir jupyterlab jupyter_server`
+
+При запуске в логах возникала ошибка без данной зависимости, с использованием базового образа `jupyter/minimal-notebook:latest`, при использовании  `jupyterhub/jupyterhub:latest`  данной ошибки не было.
+
+Добавлено копирование конфигурационного файла `jupyterhub_config.py` :
+
+`COPY jupyterhub_config.py /srv/jupyterhub/jupyterhub_config.py`
+
+Были внесены изменения в CMD теперь при запуске  указывается файл конфигурации, который будет использоваться для настройки JupyterHub:
+
+`CMD ["jupyterhub", "--config", "/srv/jupyterhub/jupyterhub_config.py"]`
+
+## 2 Правки docker-compose 
+
+Вместо использования готового образа теперь используется локальный Dockerfile для сборки образа. Это означает, что контейнер будет собираться на основе Dockerfile, который находится в текущей директории: `build: .`  и была удалена секция `command`.
+
+Далее был изменен блок с volumes, теперь будет использоваться два volume первый для хранения ноутбуков: 
+
+`build: ./data:/home/jovyan/all_notebooks`
+
+Второй volume используется для хранения конфига: 
+
+`./jupyterhub_config.py:/srv/jupyterhub/jupyterhub_config.py`
+``
+
+## 3 Добавление конфига 
+
+Для исправления ошибки авторизации и спавна ноутбуков был добавлен конфиг, для jupyterhub. 
+
+Важно отметить, что данный конфиг нельзя использовать для прода, так как здесь используется `jupyterhub.auth.DummyAuthenticator`, который позволяет использовать любое имя или пароль без создания локальных пользователей. 
+
+Для решения проблем со спавнером используется `SimpleLocalProcessSpawner`, который не требует предварительного существования локальных пользователей. Однако его не рекомендуется использовать в продакшене, так как он не позволяет изолировать разных пользователей.
+
+Чтобы реализовать использоваление глобальных переменных, нужно использвать `import os` в конфиге для jupyter, но я не успел это протестировать.
+
+
+```
+# Используем DummyAuthenticator
+
+c.JupyterHub.authenticator_class = 'dummy'
+
+# Разрешаем всем пользователям входить
+c.DummyAuthenticator.allow_all = True
+
+# Устанавливаем администратора
+c.JupyterHub.admin_users = {'admin'}
+
+# Разрешаем создание системных пользователей
+c.LocalAuthenticator.create_system_users = True
+
+# Устанавливаем рабочую директорию для Jupyter Notebook
+c.Spawner.notebook_dir = '/home/jovyan/all_notebooks'
+
+# Устанавливаем spawner
+c.JupyterHub.spawner_class = 'jupyterhub.spawner.SimpleLocalProcessSpawner'
+```
+
+
+Результат внесения изменений: 
+
+![result](img/result.png)
+
+
+
 ### Dockerfile
 На первом шаге я создавал Dockerfile для создания базового образа. Сначала я пытался использовать базовый образ Python, но столкнулся с проблемами при установке зависимостей. В результате, я решил использовать базовый образ `jupyter/minimal-notebook:latest`, который предоставляет готовую среду для запуска Jupyter Notebook. Это решение привело к увеличению размера образа, но упростило установку зависимостей.
 

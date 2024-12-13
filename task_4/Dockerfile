@@ -1,15 +1,21 @@
-FROM jupyterhub/jupyterhub:latest
+FROM jupyter/minimal-notebook:latest
+
+RUN pip install --no-cache-dir jupyterlab jupyter_server
 
 
-#Параметр корневой директории 
+# Параметр корневой директории
 ARG ROOT_DIR=/home/jovyan
 ENV ROOT_DIR=${ROOT_DIR}
 
-# Устанавливаем переменную окружения
-ENV JUPITERHUB_ADMIN_NAME=admin
-ENV JUPITERHUB_ADMIN_PASSWORD=admin
+# Устанавливаем переменную окружения с именем администратора
+ENV JUPYTERHUB_ADMIN_NAME=admin
+ENV JUPYTERHUB_ADMIN_PASSWORD=admin
 
+# Открываем порт для JupyterHub
 EXPOSE 8000
 
-# Запускаем jupyterhub
-CMD ["jupyterhub"]
+# Копируем конфигурационный файл JupyterHub в контейнер
+COPY jupyterhub_config.py /srv/jupyterhub/jupyterhub_config.py
+
+# Запускаем JupyterHub
+CMD ["jupyterhub", "--config", "/srv/jupyterhub/jupyterhub_config.py"]
