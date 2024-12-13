@@ -22,7 +22,7 @@ uvicorn - ASGI сервер, который используется для за
 
 ```
 # установка базового образа 
-FROM python:3.9-slim
+FROM python:3.10-slim
 
 # устанавливаем рабочую директорию 
 WORKDIR /app
@@ -148,3 +148,5 @@ mongodb1:
     networks:
       - backend
 ```
+
+![Результат](img/res.png)

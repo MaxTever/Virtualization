@@ -1,9 +1,15 @@
+# kuber-practice
+
+## Update
+
+Изменено количество реплик для деплоймента, и изменен базовый образ на `python:3.10-slim` для app.py
+
 ### Создание деплойментов 
 
 Для использования образа Python-приложения, созданного в предыдущем задании, необходимо опубликовать его в DockerHub. Вот пример Dockerfile для создания образа:
 
 ```
-FROM python:3.9-slim
+FROM python:3.10-slim
 WORKDIR /app
 COPY requirements.txt .
 RUN pip install --no-cache-dir --upgrade -r requirements.txt
@@ -25,7 +31,7 @@ spec:
   selector:
     matchLabels:
       app: python-app
-  replicas: 1
+  replicas: 3
   template:
     metadata:
       labels:
@@ -131,3 +137,6 @@ mongodb-service   ClusterIP      10.101.168.14   <none>        27017/TCP      7m
 nginx-service     LoadBalancer   10.100.191.32   localhost     80:30892/TCP   6m46s
 python-service    ClusterIP      10.96.133.20    <none>        8000/TCP       80s
 redis-service     ClusterIP      10.106.55.85    <none>        6379/TCP       22s
+```
+
+![Результат](img/res.png)

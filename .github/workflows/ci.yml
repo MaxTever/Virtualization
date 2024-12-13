@@ -37,7 +37,7 @@ jobs:
       
     - name: healthCheck
       run: |
-        HEALTH_STATUS=$(docker inspect --format='{{json .State.Health.Status}}' jupyter_jupiterhub_1)
+        HEALTH_STATUS=$(docker inspect --format='{{json .State.Health.Status}}' task_4_jupyterhub_1)
           if ["$HEALTH_STATUS" != "\"healthy\""]; then
             echo "Container is not healthy"
             exit 1
@@ -48,7 +48,7 @@ jobs:
 
     - name: Test container
       run: |
-        if docker ps --filter "name=jupyter_jupiterhub_1" --format "{{.Names}}" | grep -q "jupyter_jupiterhub_1"; then
+        if docker ps --filter "name=jupyter_jupiterhub_1" --format "{{.Names}}" | grep -q "task_4_jupyterhub_1"; then
           echo "Container is running"
         else
           echo "Container is not running"
